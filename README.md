@@ -103,7 +103,6 @@ servicenow-laptop-procurement-automation/
 │
 └── docs/
     ├── FLOW_DESIGNER_GUIDE.md          # Step-by-step Flow Designer configuration instructions
-    ├── DEMO_VIDEO_SCRIPT.md            # 2-3 minute presentation script for team submission
     └── TEST_CASES.md                   # Formal QA test cases matrix (TC01-TC06)
 ```
 
@@ -173,8 +172,7 @@ If configuring on a fresh ServiceNow instance, you can use the automated scripts
 
 ---
 
-## 📹 Video Presentation & Repository Deliverables
+## 📄 Project Documentation & Technical Deliverables
 
-- **Demo Video Script:** Refer to [`docs/DEMO_VIDEO_SCRIPT.md`](file:///C:/Users/soman/.gemini/antigravity/scratch/servicenow-laptop-procurement-automation/docs/DEMO_VIDEO_SCRIPT.md) for speaking cues.
 - **Test Case Matrix:** Refer to [`docs/TEST_CASES.md`](file:///C:/Users/soman/.gemini/antigravity/scratch/servicenow-laptop-procurement-automation/docs/TEST_CASES.md).
 - **Flow Designer Guide:** Refer to [`docs/FLOW_DESIGNER_GUIDE.md`](file:///C:/Users/soman/.gemini/antigravity/scratch/servicenow-laptop-procurement-automation/docs/FLOW_DESIGNER_GUIDE.md).
