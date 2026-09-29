@@ -1,0 +1,13 @@
+# Prerequisites & System Configuration
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+
+# Local scratch files
+scratch/
+temp/
