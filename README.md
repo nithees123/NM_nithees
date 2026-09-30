@@ -172,7 +172,56 @@ If configuring on a fresh ServiceNow instance, you can use the automated scripts
 
 ---
 
-## 📄 Project Documentation & Technical Deliverables
+## 📄 Project Documentation & Phasewise Deliverables
 
-- **Test Case Matrix:** Refer to [`docs/TEST_CASES.md`](file:///C:/Users/soman/.gemini/antigravity/scratch/servicenow-laptop-procurement-automation/docs/TEST_CASES.md).
-- **Flow Designer Guide:** Refer to [`docs/FLOW_DESIGNER_GUIDE.md`](file:///C:/Users/soman/.gemini/antigravity/scratch/servicenow-laptop-procurement-automation/docs/FLOW_DESIGNER_GUIDE.md).
+This repository contains the complete, submission-ready project deliverables across all **6 Project Lifecycle Phases**, adhering strictly to the **ServiceNow Phasewise Project Templates**:
+
+### 📁 Phase-by-Phase Deliverables Directory
+
+* **Phase 1: Ideation Phase (`01_phase1_ideation/`)**
+  * [`01_problem_statements.md`](01_phase1_ideation/01_problem_statements.md): Problem definition, bottleneck quantification, and stakeholder impact analysis.
+  * [`02_brainstorming_and_prioritization.md`](01_phase1_ideation/02_brainstorming_and_prioritization.md): 12 candidate concepts, Effort vs. Impact matrix, technology evaluation.
+  * [`03_empathy_map_canvas.md`](01_phase1_ideation/03_empathy_map_canvas.md): 3 user personas (Procurement Lead, Requester, Hardware Specialist).
+* **Phase 2: Requirement Analysis (`02_phase2_requirements/`)**
+  * [`01_customer_journey_map.md`](02_phase2_requirements/01_customer_journey_map.md): 6-stage end-to-end customer journey map.
+  * [`02_dfd_and_user_stories.md`](02_phase2_requirements/02_dfd_and_user_stories.md): Data Flow Diagrams (Level 0 context & Level 1 flow) and 8 Agile User Stories with Gherkin criteria.
+  * [`03_solution_requirements.md`](02_phase2_requirements/03_solution_requirements.md): Functional and non-functional requirements, SLAs, security controls.
+  * [`04_technology_stack.md`](02_phase2_requirements/04_technology_stack.md): ServiceNow platform stack, Flow Designer, ITSM data model.
+* **Phase 3: Project Design Phase (`03_phase3_project_design/`)**
+  * [`01_problem_solution_fit.md`](03_phase3_project_design/01_problem_solution_fit.md): Problem-solution fit matrix and validation.
+  * [`02_proposed_solution.md`](03_phase3_project_design/02_proposed_solution.md): Trigger and action mechanics, state transitions, exception handling.
+  * [`03_solution_architecture.md`](03_phase3_project_design/03_solution_architecture.md): 4-tier solution architecture, Entity-Relationship (ER) diagram, RBAC model.
+* **Phase 4: Project Planning Phase (`04_phase4_project_planning/`)**
+  * [`01_wbs_and_planning_logic.md`](04_phase4_project_planning/01_wbs_and_planning_logic.md): 4-level Work Breakdown Structure (28 work packages) and CPM network.
+  * [`02_project_planning_template.md`](04_phase4_project_planning/02_project_planning_template.md): 4-sprint implementation schedule, RACI matrix, risk registers.
+* **Phase 5: Implementation & Testing (`05_phase5_development_and_testing/`)**
+  * [`flow_designer_specs.md`](05_phase5_development_and_testing/01_implementation_artifacts/flow_designer_specs.md): Field-by-field configuration blueprint for Flow Designer.
+  * [`catalog_item_specs.md`](05_phase5_development_and_testing/01_implementation_artifacts/catalog_item_specs.md): Service Catalog item definitions, variables, and process engine binding.
+  * [`sys_hub_flow_standard_laptop_procurement.xml`](05_phase5_development_and_testing/01_implementation_artifacts/sys_hub_flow_standard_laptop_procurement.xml) & [`.json`](05_phase5_development_and_testing/01_implementation_artifacts/sys_hub_flow_standard_laptop_procurement.json): Ready-to-import Flow export definitions.
+  * [`catalog_client_scripts.js`](05_phase5_development_and_testing/01_implementation_artifacts/catalog_client_scripts.js): Client-side form scripts (`onLoad`, `onChange`, `onSubmit`).
+  * [`uat_test_plan_and_execution_report.md`](05_phase5_development_and_testing/02_uat_testing/uat_test_plan_and_execution_report.md): 8 UAT test scenarios with execution logs and 100% pass verification.
+* **Phase 6: Project Documentation (`06_phase6_project_documentation/`)**
+  * [`01_functional_specification_document_fsd.md`](06_phase6_project_documentation/01_functional_specification_document_fsd.md): Complete enterprise Functional Specification Document (FSD).
+  * [`02_final_project_report.md`](06_phase6_project_documentation/02_final_project_report.md): Final closure report with KPI metrics (-83% turnaround, 342% ROI).
+
+---
+
+### 📦 Formatted DOCX & PDF Deliverables Package
+
+For formal submission and offline review, all documentation and specifications are compiled in **Microsoft Word (`.docx`)** and **Adobe Acrobat (`.pdf`)** formats in:
+👉 [`phasewise_deliverables_docx_and_pdf/`](phasewise_deliverables_docx_and_pdf/)
+
+* [`00_Master_Deliverables_Summary.docx / .pdf`](phasewise_deliverables_docx_and_pdf/00_Master_Deliverables_Summary.docx)
+* [`01_Ideation_Phase/`](phasewise_deliverables_docx_and_pdf/01_Ideation_Phase/) (Problem Statements, Brainstorming, Empathy Map Canvas)
+* [`02_Requirement_Analysis/`](phasewise_deliverables_docx_and_pdf/02_Requirement_Analysis/) (Customer Journey, DFDs, Requirements, Tech Stack)
+* [`03_Project_Design_Phase/`](phasewise_deliverables_docx_and_pdf/03_Project_Design_Phase/) (Problem-Solution Fit, Proposed Solution, Solution Architecture)
+* [`04_Project_Planning_Phase/`](phasewise_deliverables_docx_and_pdf/04_Project_Planning_Phase/) (Planning Logic, Project Planning Template)
+* [`05_Project_Development_Phase/`](phasewise_deliverables_docx_and_pdf/05_Project_Development_Phase/) (Flow Specs, Catalog Specs, XML Docs, Client Scripts, UAT Report, Raw XML/JSON)
+* [`06_Project_Documentation/`](phasewise_deliverables_docx_and_pdf/06_Project_Documentation/) (Functional Specification Document, Final Project Report)
+
+---
+
+### 🧪 Automated Test Verification Suite
+An end-to-end test verification harness is included in [`tests/verify_deliverables.py`](tests/verify_deliverables.py).
+Run `python tests/verify_deliverables.py` to validate deliverable integrity, template conformance, and diagram syntax (16/16 tests passing).
+

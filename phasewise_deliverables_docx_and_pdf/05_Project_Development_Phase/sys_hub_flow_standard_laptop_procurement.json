@@ -1,0 +1,426 @@
+{
+  "flow_metadata": {
+    "sys_id": "7e36816197113110a24734000153af22",
+    "name": "Standard Laptop Procurement Flow",
+    "internal_name": "laptop_procurement_flow",
+    "version": "1.0.0",
+    "status": "published",
+    "active": true,
+    "run_as": "system",
+    "scope": "global",
+    "category": "service_catalog",
+    "type": "flow",
+    "compiler_build": "Rome_Patch9_Hotfix2_GraalVM_Engine",
+    "description": "Enterprise automated orchestration engine for standard laptop orders submitted via Service Catalog. Handles variable extraction, VIP auto-approvals, manager approval routing, inventory checks, hardware imaging, logistics deployment, asset synchronization in alm_hardware, and customer notifications.",
+    "sys_created_by": "admin",
+    "sys_created_on": "2026-09-30 06:45:10",
+    "sys_updated_by": "admin",
+    "sys_updated_on": "2026-09-30 06:55:00"
+  },
+  "trigger": {
+    "sys_id": "ba36816197113110a24734000153af33",
+    "type": "record_create",
+    "name": "Created",
+    "table": "sc_req_item",
+    "filter_condition": "cat_item=0b36816197113110a24734000153af45^stage=request_approved^ORstage=waiting_for_approval^EQ",
+    "execution_timing": "background",
+    "outputs": [
+      {
+        "name": "1__request_item",
+        "label": "Trigger - Record Created > Requested Item Record",
+        "type": "GlideRecord",
+        "reference_table": "sc_req_item"
+      },
+      {
+        "name": "1__request_item.sys_id",
+        "label": "Requested Item Sys ID",
+        "type": "GUID"
+      },
+      {
+        "name": "1__request_item.number",
+        "label": "Requested Item Number",
+        "type": "String"
+      },
+      {
+        "name": "1__request_item.opened_by",
+        "label": "Opened By",
+        "type": "Reference",
+        "reference_table": "sys_user"
+      },
+      {
+        "name": "1__request_item.opened_by.manager",
+        "label": "Opened By > Manager",
+        "type": "Reference",
+        "reference_table": "sys_user"
+      },
+      {
+        "name": "1__request_item.opened_by.vip",
+        "label": "Opened By > VIP",
+        "type": "Boolean"
+      },
+      {
+        "name": "1__request_item.request",
+        "label": "Parent Request",
+        "type": "Reference",
+        "reference_table": "sc_request"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "order": 1,
+      "ui_id": "step_get_variables",
+      "label": "Get Catalog Variables",
+      "action_type": "core_action_get_variables",
+      "sys_id": "0a36816197113110a24734000153af51",
+      "description": "Extract all user-supplied parameters from the submitted catalog item record",
+      "inputs": {
+        "submitted_item": "{{1__request_item}}",
+        "catalog_item": "0b36816197113110a24734000153af45",
+        "variables": [
+          "employee_name",
+          "department",
+          "manager_name",
+          "job_title",
+          "asset_type",
+          "laptop_model",
+          "replacement_reason",
+          "existing_asset_tag",
+          "business_justification",
+          "shipping_type",
+          "shipping_address",
+          "accessories"
+        ]
+      },
+      "outputs": [
+        { "name": "step[1].variables.employee_name", "type": "Reference", "reference_table": "sys_user" },
+        { "name": "step[1].variables.department", "type": "Reference", "reference_table": "cmn_department" },
+        { "name": "step[1].variables.asset_type", "type": "Choice" },
+        { "name": "step[1].variables.laptop_model", "type": "Choice" },
+        { "name": "step[1].variables.replacement_reason", "type": "Choice" },
+        { "name": "step[1].variables.existing_asset_tag", "type": "String" },
+        { "name": "step[1].variables.business_justification", "type": "String" },
+        { "name": "step[1].variables.shipping_type", "type": "Choice" },
+        { "name": "step[1].variables.shipping_address", "type": "String" },
+        { "name": "step[1].variables.accessories", "type": "List" }
+      ]
+    },
+    {
+      "order": 2,
+      "ui_id": "branch_vip_eval",
+      "label": "VIP / Executive Threshold Decision",
+      "action_type": "flow_logic_if",
+      "conditions": [
+        {
+          "logical_operator": "OR",
+          "rules": [
+            { "field": "{{1__request_item.opened_by.vip}}", "operator": "EQUALS", "value": "true" },
+            { "field": "{{1__request_item.opened_by.title}}", "operator": "CONTAINS", "value": "Vice President" },
+            { "field": "{{1__request_item.opened_by.title}}", "operator": "CONTAINS", "value": "Director" }
+          ]
+        }
+      ],
+      "true_branch": [
+        {
+          "order": 3,
+          "step_sub_index": "3A",
+          "ui_id": "action_vip_auto_approve",
+          "label": "VIP Fast-Track Auto-Approval",
+          "action_type": "core_action_update_record",
+          "sys_id": "2a36816197113110a24734000153af53",
+          "inputs": {
+            "record": "{{1__request_item}}",
+            "table": "sc_req_item",
+            "field_values": {
+              "approval": "approved",
+              "stage": "fulfillment",
+              "state": "2",
+              "work_notes": "Executive VIP Fast-Track Rule Applied: Manager approval requirement bypassed for VIP requester {{1__request_item.opened_by.name}}."
+            }
+          }
+        }
+      ],
+      "false_branch": [
+        {
+          "order": 4,
+          "step_sub_index": "3B",
+          "ui_id": "action_ask_manager_approval",
+          "label": "Ask For Manager Approval",
+          "action_type": "core_action_ask_for_approval",
+          "sys_id": "1b36816197113110a24734000153af55",
+          "inputs": {
+            "record": "{{1__request_item}}",
+            "approval_rule": "anyone_approves",
+            "rejection_rule": "anyone_rejects",
+            "approver_source": "fd_transform.coalesce({{1__request_item.opened_by.manager}}, {{1__request_item.opened_by.department.dept_head}}, '287ee6efe0a2a1509cd4b52b2fd96191')",
+            "due_date_calculation": "fd_transform.date_add_business_days({{1__request_item.sys_created_on}}, 3)",
+            "wait_for_completion": true
+          },
+          "outputs": [
+            { "name": "step[3b].approval_state", "type": "Choice", "choices": ["approved", "rejected", "cancelled"] },
+            { "name": "step[3b].approver_record", "type": "Reference", "reference_table": "sysapproval_approver" }
+          ]
+        }
+      ]
+    },
+    {
+      "order": 5,
+      "ui_id": "action_set_ritm_fulfillment",
+      "label": "Update RITM Stage to Fulfillment",
+      "action_type": "core_action_update_record",
+      "sys_id": "4b36816197113110a24734000153af67",
+      "inputs": {
+        "record": "{{1__request_item}}",
+        "table": "sc_req_item",
+        "field_values": {
+          "stage": "fulfillment",
+          "state": "2",
+          "comments": "Your laptop procurement request has been authorized and dispatched to IT Hardware Operations for configuration and staging."
+        }
+      }
+    },
+    {
+      "order": 6,
+      "ui_id": "subflow_stock_check",
+      "label": "Subflow: Check Hardware Inventory & Reserve Stock",
+      "action_type": "core_action_call_subflow",
+      "subflow_sys_id": "3c36816197113110a24734000153af88",
+      "subflow_name": "subflow_check_hardware_inventory",
+      "inputs": {
+        "model_name": "{{step[1].variables.laptop_model}}",
+        "target_location": "{{1__request_item.opened_by.location}}",
+        "request_item": "{{1__request_item.sys_id}}"
+      },
+      "outputs": [
+        { "name": "step[6].is_in_stock", "type": "Boolean" },
+        { "name": "step[6].asset_tag", "type": "String" },
+        { "name": "step[6].serial_number", "type": "String" }
+      ]
+    },
+    {
+      "order": 7,
+      "ui_id": "action_create_sctask_imaging",
+      "label": "Create Catalog Task - Hardware Imaging & Configuration",
+      "action_type": "core_action_create_catalog_task",
+      "sys_id": "5b36816197113110a24734000153af77",
+      "inputs": {
+        "request_item": "{{1__request_item.sys_id}}",
+        "table": "sc_task",
+        "assignment_group": "8a5055c7c61122780019363fb2241370",
+        "short_description": "Build, Image, and Configure Laptop: {{step[1].variables.laptop_model}}",
+        "priority": "{{1__request_item.opened_by.vip}} ? 2 : 3",
+        "due_date": "fd_transform.date_add_business_days({{1__request_item.sys_created_on}}, 2)",
+        "wait_for_completion": true
+      },
+      "outputs": [
+        { "name": "step[7].catalog_task", "type": "Reference", "reference_table": "sc_task" },
+        { "name": "step[7].catalog_task.number", "type": "String" },
+        { "name": "step[7].catalog_task.state", "type": "Choice" }
+      ]
+    },
+    {
+      "order": 8,
+      "ui_id": "action_wait_task1",
+      "label": "Wait for Condition - Imaging Task Completion",
+      "action_type": "core_action_wait_for_condition",
+      "inputs": {
+        "record": "{{step[7].catalog_task}}",
+        "table": "sc_task",
+        "conditions": "state=3^ORstate=4^EQ"
+      }
+    },
+    {
+      "order": 9,
+      "ui_id": "action_create_sctask_logistics",
+      "label": "Create Catalog Task - Logistics & Asset Deployment",
+      "action_type": "core_action_create_catalog_task",
+      "sys_id": "8b36816197113110a24734000153af81",
+      "inputs": {
+        "request_item": "{{1__request_item.sys_id}}",
+        "table": "sc_task",
+        "assignment_group": "287ee6efe0a2a1509cd4b52b2fd96191",
+        "short_description": "Package, Dispatch, and Ship Laptop to {{1__request_item.opened_by.name}}",
+        "priority": "3",
+        "due_date": "fd_transform.date_add_business_days({{1__request_item.sys_created_on}}, 3)",
+        "wait_for_completion": true
+      },
+      "outputs": [
+        { "name": "step[9].catalog_task", "type": "Reference", "reference_table": "sc_task" },
+        { "name": "step[9].catalog_task.number", "type": "String" }
+      ]
+    },
+    {
+      "order": 10,
+      "ui_id": "action_wait_task2",
+      "label": "Wait for Condition - Logistics Task Completion",
+      "action_type": "core_action_wait_for_condition",
+      "inputs": {
+        "record": "{{step[9].catalog_task}}",
+        "table": "sc_task",
+        "conditions": "state=3^EQ"
+      }
+    },
+    {
+      "order": 11,
+      "ui_id": "action_sync_asset_record",
+      "label": "Synchronize Asset Record in alm_hardware",
+      "action_type": "core_action_update_record",
+      "sys_id": "ab36816197113110a24734000153af83",
+      "inputs": {
+        "table": "alm_hardware",
+        "record_query": "asset_tag={{step[6].asset_tag}}",
+        "field_values": {
+          "install_status": "1",
+          "substatus": "",
+          "assigned_to": "{{1__request_item.opened_by}}",
+          "comments": "Asset issued via automated Flow Designer workflow for RITM {{1__request_item.number}}"
+        }
+      }
+    },
+    {
+      "order": 12,
+      "ui_id": "action_close_ritm",
+      "label": "Update RITM Record to Closed Complete",
+      "action_type": "core_action_update_record",
+      "sys_id": "bb36816197113110a24734000153af84",
+      "inputs": {
+        "record": "{{1__request_item}}",
+        "table": "sc_req_item",
+        "field_values": {
+          "stage": "complete",
+          "state": "3",
+          "active": "false",
+          "comments": "Your laptop order has been successfully fulfilled, provisioned, and shipped! Tracking information and onboarding instructions have been dispatched to your corporate email."
+        }
+      }
+    },
+    {
+      "order": 13,
+      "ui_id": "action_close_parent_req",
+      "label": "Update Parent Request Record (sc_request)",
+      "action_type": "core_action_update_record",
+      "inputs": {
+        "record": "{{1__request_item.request}}",
+        "table": "sc_request",
+        "field_values": {
+          "request_state": "closed_complete",
+          "stage": "closed_complete",
+          "state": "3",
+          "work_notes": "Automated cascade: All child requested items completed. Closing parent Request."
+        }
+      }
+    },
+    {
+      "order": 14,
+      "ui_id": "action_send_shipped_email",
+      "label": "Send Email Notification - Shipped with Tracking",
+      "action_type": "core_action_send_email",
+      "sys_id": "cb36816197113110a24734000153af85",
+      "inputs": {
+        "to": "{{1__request_item.opened_by.email}}",
+        "subject": "Your Standard Laptop Has Been Shipped - {{1__request_item.number}}",
+        "body_type": "html",
+        "body": "<p>Dear {{1__request_item.opened_by.first_name}},</p><p>We are pleased to inform you that your laptop procurement order ({{1__request_item.number}}) has been configured and shipped via {{step[1].variables.shipping_type}}.</p><p>Hardware Model: {{step[1].variables.laptop_model}}<br>Asset Tag: {{step[6].asset_tag}}<br>Serial Number: {{step[6].serial_number}}</p>"
+      }
+    },
+    {
+      "order": 15,
+      "ui_id": "branch_rejection",
+      "label": "Rejection Branch Decision Logic",
+      "action_type": "flow_logic_else_if",
+      "condition": "{{step[3b].approval_state}} == 'rejected'"
+    },
+    {
+      "order": 16,
+      "ui_id": "action_reject_ritm",
+      "label": "Update RITM Record to Closed Rejected",
+      "action_type": "core_action_update_record",
+      "sys_id": "db36816197113110a24734000153af86",
+      "inputs": {
+        "record": "{{1__request_item}}",
+        "table": "sc_req_item",
+        "field_values": {
+          "stage": "request_cancelled",
+          "state": "7",
+          "approval": "rejected",
+          "active": "false",
+          "comments": "Your laptop procurement request has been reviewed and rejected by {{step[3b].approver_record.approver.name}}."
+        }
+      }
+    },
+    {
+      "order": 17,
+      "ui_id": "action_send_rejection_email",
+      "label": "Send Rejection Email Notification",
+      "action_type": "core_action_send_email",
+      "sys_id": "eb36816197113110a24734000153af87",
+      "inputs": {
+        "to": "{{1__request_item.opened_by.email}}",
+        "subject": "Procurement Request Rejected - {{1__request_item.number}}",
+        "body_type": "html",
+        "body": "<p>Dear {{1__request_item.opened_by.first_name}},</p><p>Your request for a corporate laptop ({{1__request_item.number}}) has been rejected by {{step[3b].approver_record.approver.name}}.</p><p>Comments: {{step[3b].approver_record.comments}}</p>"
+      }
+    }
+  ],
+  "error_handler": {
+    "sys_id": "fb36816197113110a24734000153af99",
+    "name": "Global Workflow Error Handler",
+    "active": true,
+    "actions": [
+      {
+        "order": 1,
+        "ui_id": "error_log",
+        "label": "Log System Diagnostic Error",
+        "action_type": "core_action_log",
+        "inputs": {
+          "level": "error",
+          "message": "FLOW_EXECUTION_FAILURE on RITM {{1__request_item.number}}: {{flow.error_message}} at Step {{flow.step_number}}"
+        }
+      },
+      {
+        "order": 2,
+        "ui_id": "error_ritm_hold",
+        "label": "Place RITM On Technical Hold",
+        "action_type": "core_action_update_record",
+        "inputs": {
+          "record": "{{1__request_item}}",
+          "table": "sc_req_item",
+          "field_values": {
+            "state": "-5",
+            "hold_reason": "Technical Exception in Workflow Engine",
+            "work_notes": "CRITICAL EXCEPTION: Automated workflow engine halted at Step {{flow.step_number}} due to error: {{flow.error_message}}. Automatically generating triage Incident for ServiceNow Platform Support."
+          }
+        }
+      },
+      {
+        "order": 3,
+        "ui_id": "error_create_incident",
+        "label": "Create Platform Engineering Incident",
+        "action_type": "core_action_create_record",
+        "inputs": {
+          "table": "incident",
+          "field_values": {
+            "caller_id": "6816f79cc0a8016400b0ee22381ac541",
+            "assignment_group": "d8e9f0a1b2c34567890abcdef1234567",
+            "impact": "2",
+            "urgency": "2",
+            "priority": "2",
+            "short_description": "Workflow Failure: Laptop Procurement Workflow on {{1__request_item.number}}",
+            "description": "Flow Context ID: {{flow.context_id}}\nRITM: {{1__request_item.number}}\nFailing Step: {{flow.step_number}}\nError Message: {{flow.error_message}}\nRequester: {{1__request_item.opened_by.name}}"
+          }
+        }
+      },
+      {
+        "order": 4,
+        "ui_id": "error_send_alert",
+        "label": "Dispatch Operational Alert Email",
+        "action_type": "core_action_send_email",
+        "inputs": {
+          "to": "it_procurement_ops@company.com, servicenow_oncall@company.com",
+          "subject": "CRITICAL ALERT: Workflow Failure on Laptop Request {{1__request_item.number}}",
+          "body": "A system-level workflow failure occurred during execution of the Standard Laptop Procurement Flow. Immediate administrative intervention required."
+        }
+      }
+    ]
+  }
+}
