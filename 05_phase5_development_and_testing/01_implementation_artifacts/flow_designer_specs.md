@@ -6,7 +6,7 @@
 **Application Scope**: `Global` (`global`) / `ITSM Service Catalog`  
 **Flow Sys ID**: `7e36816197113110a24734000153af22`  
 **Target ServiceNow Release**: Washington DC / Xanadu / Utah  
-**Author**: worker_phase5 (Phase 5 Development & Testing Lead)  
+**Author**: Project Implementation Team (Technical Lead)  
 **Status**: Published & Active  
 
 ---

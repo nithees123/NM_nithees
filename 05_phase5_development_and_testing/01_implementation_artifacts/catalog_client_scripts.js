@@ -4,7 +4,7 @@
  * Target Catalog Item: Standard Business Laptop Request (sys_id: 0b36816197113110a24734000153af45)
  * Scope: Global
  * Architecture: Asynchronous callbacks, strict input validation, responsive UI messaging
- * Author: worker_phase5 (Phase 5 Development & Testing Lead)
+ * Author: Project Implementation Team (Technical Lead)
  * Target Release: Washington DC / Xanadu / Utah
  */
 

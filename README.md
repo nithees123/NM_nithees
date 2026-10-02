@@ -146,20 +146,6 @@ servicenow-laptop-procurement-automation/
 
 ---
 
-## 🛠️ Automated Setup via Background Scripts
-
-If configuring on a fresh ServiceNow instance, you can use the automated scripts located in `scripts/`:
-
-1. **Create Catalog Item & Variables:**
-   - In ServiceNow, navigate to **System Definition > Scripts - Background**.
-   - Copy the contents of [`scripts/setup_catalog_item.js`](file:///C:/Users/soman/.gemini/antigravity/scratch/servicenow-laptop-procurement-automation/scripts/setup_catalog_item.js).
-   - Click **Run script**.
-
-2. **Automated End-to-End Test:**
-   - In **Scripts - Background**, run [`scripts/test_order_and_approval.js`](file:///C:/Users/soman/.gemini/antigravity/scratch/servicenow-laptop-procurement-automation/scripts/test_order_and_approval.js).
-   - This script creates a test user request, approves it, and confirms task assignment to the **Hardware** group.
-
----
 
 ## 📊 Business Impact & Results
 

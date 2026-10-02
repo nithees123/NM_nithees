@@ -2,7 +2,7 @@
 **Document Reference**: PRJ-SNP-P1-003  
 **Project**: Streamlining IT Procurement: Automating Standard Laptop Orders with Flow Designer  
 **Milestone**: M1 (Phase 1 — Ideation Deliverables)  
-**Author**: worker_phase1 (Phase 1 Ideation Deliverables Lead)  
+**Author**: Project Implementation Team (Ideation Lead)  
 **Classification**: User Experience (UX), Human-Centered Design & Stakeholder Psychology  
 **Status**: Submission Ready  
 

@@ -5,7 +5,7 @@
 **Application Scope**: `Global` (`global`)  
 **Catalog Item Sys ID**: `0b36816197113110a24734000153af45`  
 **Target Release**: ServiceNow Washington DC / Xanadu / Utah  
-**Author**: worker_phase5 (Phase 5 Development & Testing Lead)  
+**Author**: Project Implementation Team (Technical Lead)  
 **Status**: Active & Available in Service Portal  
 
 ---

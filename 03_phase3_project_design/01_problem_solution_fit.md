@@ -4,7 +4,7 @@
 **Project Title**: Streamlining IT Procurement: Automating Standard Laptop Orders with Flow Designer  
 **Document Identifier**: PROJ-DESIGN-01-PSF  
 **Target Release**: ServiceNow Washington DC / Xanadu / Utah  
-**Author**: worker_phase3 (Phase 3 Project Design Deliverables Lead)  
+**Author**: Project Implementation Team (Solution Architecture Lead)  
 **Status**: Authoritative Architectural Design Deliverable  
 **Date**: 2026-09-30  
 
@@ -307,4 +307,4 @@ To prevent operational regressions, the solution architecture incorporates defen
 
 | Version | Date | Author | Role | Description of Change |
 |---|---|---|---|---|
-| **1.0** | 2026-09-30 | worker_phase3 | Phase 3 Design Lead | Initial Authoritative Deliverable: 8-Dimension Problem-Solution Fit, Quantitative Benchmarks, Value Proposition Canvas, and Edge Safeguards. |
+| **1.0** | 2026-09-30 | Project Implementation Team | Phase 3 Design Lead | Initial Authoritative Deliverable: 8-Dimension Problem-Solution Fit, Quantitative Benchmarks, Value Proposition Canvas, and Edge Safeguards. |

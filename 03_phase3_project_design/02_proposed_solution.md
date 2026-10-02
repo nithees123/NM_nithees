@@ -4,7 +4,7 @@
 **Project Title**: Streamlining IT Procurement: Automating Standard Laptop Orders with Flow Designer  
 **Document Identifier**: PROJ-DESIGN-02-SOL  
 **Target Release**: ServiceNow Washington DC / Xanadu / Utah  
-**Author**: worker_phase3 (Phase 3 Project Design Deliverables Lead)  
+**Author**: Project Implementation Team (Solution Architecture Lead)  
 **Status**: Authoritative Architectural Design Deliverable  
 **Date**: 2026-09-30  
 
@@ -522,4 +522,4 @@ Because Flow Designer executes each action within managed database transactional
 
 | Version | Date | Author | Role | Description of Change |
 |---|---|---|---|---|
-| **1.0** | 2026-09-30 | worker_phase3 | Phase 3 Design Lead | Authoritative Deliverable: 17-Step End-to-End Workflow Design, Trigger Mechanics, Escalations, Task Definitions, Notification Catalog, and Error Handling. |
+| **1.0** | 2026-09-30 | Project Implementation Team | Phase 3 Design Lead | Authoritative Deliverable: 17-Step End-to-End Workflow Design, Trigger Mechanics, Escalations, Task Definitions, Notification Catalog, and Error Handling. |

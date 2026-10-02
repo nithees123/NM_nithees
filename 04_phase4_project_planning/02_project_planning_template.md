@@ -4,7 +4,7 @@
 **Document Identifier**: PLAN-PHASE4-TEMPLATE-V1.0  
 **Target Release**: ServiceNow Washington DC / Xanadu / Utah LTS  
 **Methodology**: ServiceNow Implementation Methodology (SIM) / Hybrid Agile-Waterfall  
-**Author**: worker_phase4 (Phase 4 Project Planning Deliverables Lead)  
+**Author**: Project Implementation Team (Planning Lead)  
 **Date**: 2026-09-30  
 **Document Status**: Approved Baseline  
 
@@ -296,4 +296,4 @@ To maintain active risk governance throughout the 12-week implementation lifecyc
 | **Solution Architect** | Elena Rostova | Certified ServiceNow Master Architect | *[Signed electronically]* | 2026-09-30 |
 | **Lead QA Engineer** | Sarah Jenkins | Lead Platform Test Engineer | *[Signed electronically]* | 2026-09-30 |
 | **Hardware Fulfillment Lead**| Robert Chen | IT Depot & Logistics Manager | *[Signed electronically]* | 2026-09-30 |
-| **Deliverables Lead** | worker_phase4 | Phase 4 Project Planning Lead | *[Signed electronically]* | 2026-09-30 |
+| **Deliverables Lead** | Project Implementation Team | Phase 4 Project Planning Lead | *[Signed electronically]* | 2026-09-30 |
